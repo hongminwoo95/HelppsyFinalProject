@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.cai.helppsy.HelppsyApplicationTests" tests="1" skipped="0" failures="0" errors="0" timestamp="2025-05-22T06:51:53.424Z" hostname="DESKTOP-QKAC8IF" time="0.569">
+  <properties/>
+  <testcase name="contextLoads()" classname="com.cai.helppsy.HelppsyApplicationTests" time="0.569"/>
+  <system-out><![CDATA[15:51:48.281 [Test worker] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.cai.helppsy.HelppsyApplicationTests]: HelppsyApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+15:51:48.449 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.cai.helppsy.HelppsyApplication for test class com.cai.helppsy.HelppsyApplicationTests
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.4.5)
+
+2025-05-22T15:51:49.056+09:00  INFO 18156 --- [helppsy] [    Test worker] c.cai.helppsy.HelppsyApplicationTests    : Starting HelppsyApplicationTests using Java 17.0.15 with PID 18156 (started by human040110 in C:\Users\human040110\Desktop\helppsy)
+2025-05-22T15:51:49.058+09:00  INFO 18156 --- [helppsy] [    Test worker] c.cai.helppsy.HelppsyApplicationTests    : No active profile set, falling back to 1 default profile: "default"
+2025-05-22T15:51:49.997+09:00  INFO 18156 --- [helppsy] [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-05-22T15:51:50.070+09:00  INFO 18156 --- [helppsy] [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 61 ms. Found 2 JPA repository interfaces.
+2025-05-22T15:51:50.570+09:00  INFO 18156 --- [helppsy] [    Test worker] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-05-22T15:51:50.666+09:00  INFO 18156 --- [helppsy] [    Test worker] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.13.Final
+2025-05-22T15:51:50.723+09:00  INFO 18156 --- [helppsy] [    Test worker] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2025-05-22T15:51:51.151+09:00  INFO 18156 --- [helppsy] [    Test worker] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-05-22T15:51:51.194+09:00  INFO 18156 --- [helppsy] [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2025-05-22T15:51:51.326+09:00  INFO 18156 --- [helppsy] [    Test worker] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.mariadb.jdbc.Connection@3bf5911d
+2025-05-22T15:51:51.330+09:00  INFO 18156 --- [helppsy] [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2025-05-22T15:51:51.422+09:00  INFO 18156 --- [helppsy] [    Test worker] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 11.4.5
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-05-22T15:51:52.388+09:00  INFO 18156 --- [helppsy] [    Test worker] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-05-22T15:51:52.447+09:00  INFO 18156 --- [helppsy] [    Test worker] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-05-22T15:51:53.402+09:00  INFO 18156 --- [helppsy] [    Test worker] c.cai.helppsy.HelppsyApplicationTests    : Started HelppsyApplicationTests in 4.71 seconds (process running for 6.552)
+______________________________________________
+C:\Users\human040110\Desktop\helppsy
+______________________________________________
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
