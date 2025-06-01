@@ -140,11 +140,12 @@
                     <input type="hidden" name="alias" th:value="${session.userAlias}" />
                     <input type="hidden" name="commentId" th:value="${commentlist.id}" />
                     <input type="submit" value="대댓글등록">
+            <!-- 대댓글 목록을 보여줄 영역 -->
+            <div class="reply-list" th:attr="data-comment-id=${commentlist.id}"></div>
                 </form>
             </div>
 
-            <!-- 대댓글 목록을 보여줄 영역 -->
-            <div class="reply-list" th:attr="data-comment-id=${commentlist.id}"></div>
+
 
         </div>
     </div>
@@ -155,19 +156,51 @@
 </html>
 <script>
     // 대댓글 입력창 토글
-    $(document).on('click', '.commentBtn', function () {
-        const commentId = $(this).data('comment-id');
-        $('.commentReply[data-comment-id="' + commentId + '"]').toggle();
+$(document).on('click', '.commentBtn', function () {
+    const commentId = $(this).data('comment-id');
+    const $commentReply = $('.commentReply[data-comment-id="' + commentId + '"]');  // 대댓글 입력창을 선택
 
-        // 문서의 .commentBtn 클래스를 클릭하면 이벤트 발생
-        // $(this)=이벤트를 발생시킨 객체
-        // commentId 변수에  commentBtn의 comment-id 값을 대입
-        // .commentReply클래스의 몇번째 commentId를 클릭시 toggle()가리고 보이고를 조절 가능
-        // 해당 몇번째 댓글에 대댓글을 이벤트 발생시킬것인지 조정이 가능. th:attr주지 않을시
-        // 중복되는 id가 있을시 중복된 id모두 동작 - 중복 동작을 막기위해 작성
-    });
+    // 대댓글 입력란을 보이게/숨기게
+    $commentReply.toggle(); // toggle을 이용해 보이거나 숨기기
+});
 
-    // 대댓글 비동기 전송
+// 대댓글 목록을 가져오는 로직 (여기서부터는 이미 잘 작성된 것 같음)
+$(document).on('click', '.commentBtn', function () {
+    const commentId = $(this).data('comment-id');
+    const $replyListContainer = $('.reply-list[data-comment-id="' + commentId + '"]');  // 대댓글 목록을 보여줄 곳 찾기
+
+    // 대댓글 목록이 비어 있으면 서버에서 대댓글 목록을 가져옵니다.
+    if ($replyListContainer.is(':empty')) {
+        $.ajax({
+            url: '/getReplies',
+            type: 'GET',
+            data: { commentId: commentId },
+            dataType: 'json',
+            success: function (response) {
+                console.log(response); // 응답 데이터를 콘솔로 확인
+
+                // 대댓글 목록을 출력할 HTML을 준비
+                let repliesHtml = '';
+                response.forEach(function (reply) {
+                    repliesHtml += `
+                        <div class="reply">
+                            <strong>${reply.alias}</strong> :
+                            <span>${reply.comment}</span>
+                        </div>
+                    `;
+                });
+
+                // 대댓글 목록을 DOM에 추가
+                $replyListContainer.html(repliesHtml);
+            },
+            error: function () {
+                alert('대댓글을 불러오는 데 실패했습니다.');
+            }
+        });
+    }
+});
+
+// 대댓글 비동기 전송
     $(document).on('submit', '.comment-reply-form', function (e) {
         e.preventDefault();
         // .comment-reply-form폼에 submit 발생하면 이벤트 발생
@@ -183,7 +216,7 @@
             dataType: 'json',
             success: function (response) {
                 console.log("Ajax 응답:", response);
-                alert('대댓글이 등록되었습니다!');
+               // alert('대댓글이 등록되었습니다!');
                 form[0].reset(); // 폼 초기화
 
                 // 대댓글 HTML 생성
@@ -202,4 +235,5 @@
             }
         });
     });
+
 </script>

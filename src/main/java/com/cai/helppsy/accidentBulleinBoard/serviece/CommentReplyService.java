@@ -1,18 +1,25 @@
 package com.cai.helppsy.accidentBulleinBoard.serviece;
 
 
-import com.cai.helppsy.accidentBulleinBoard.DTO.ReplyDTO;
 import com.cai.helppsy.accidentBulleinBoard.entity.CommentEntity;
 import com.cai.helppsy.accidentBulleinBoard.entity.CommentReplyEntity;
 import com.cai.helppsy.accidentBulleinBoard.repository.CommentReplyRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class CommentReplyService {
 
     private final CommentReplyRepository commentReplyRepository;
+
+    // 대댓글 버튼 눌렀을때
+    public List<CommentReplyEntity> getRepliesByCommentId(Integer commentId){
+        return commentReplyRepository.findByCommentEntityId(commentId);
+    }
+
 
 
     // 대댓글 저장

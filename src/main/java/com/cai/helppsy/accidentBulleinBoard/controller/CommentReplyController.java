@@ -7,16 +7,36 @@ import com.cai.helppsy.accidentBulleinBoard.serviece.CommentReplyService;
 import com.cai.helppsy.accidentBulleinBoard.serviece.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequiredArgsConstructor
 public class CommentReplyController {
 
     private final CommentReplyService commentReplyService;
+
+    // 대댓글 클릭시 대댓글 리스트 가져오기
+    @GetMapping("/getReplies")
+    @ResponseBody
+    public List<ReplyDTO> getReplies(@RequestParam("commentId") Integer commentId){
+        List<CommentReplyEntity> replies = commentReplyService.getRepliesByCommentId(commentId);
+
+        // CommentReplyEntity 리스트를 ReplyDTO 리스트로 변환
+        List<ReplyDTO> replyDTOs = replies.stream()
+                .map(reply -> new ReplyDTO(
+                        reply.getId(),          // 대댓글 ID
+                        reply.getComment(),     // 대댓글 내용
+                        reply.getAlias(),       // 대댓글 작성자의 별명
+                        reply.getCommentEntity().getId()))  // 원본 댓글의 ID
+                .collect(Collectors.toList());  // 변환된 ReplyDTO 객체들을 리스트에 수집
+
+        // 변환된 ReplyDTO 리스트를 반환
+        return replyDTOs;
+    }
+
 
     // 대댓글 저장하기
     @PostMapping("/reply")
