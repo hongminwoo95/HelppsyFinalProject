@@ -82,7 +82,7 @@
     <ul>
         <li><a th:href="@{/main}">메인 화면</a></li>
         <li><a th:href="@{/accidenttype}">사고유형</a></li>
-        <li><a th:href="@{/accidentwriting}">글쓰기</a></li>
+        <li th:if="${session.userAlias}!=null">><a th:href="@{/accidentwriting}">글쓰기</a></li>
     </ul>
 </nav>
 

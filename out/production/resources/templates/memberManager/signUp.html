@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+</style>
+
+<body>
+    <form id="form" action="signUp" method="post">
+        <table border="1px">
+
+            <tr>
+                <td>아이디</td>
+                <td><input id="id" type="text" name="userId"></td>
+            </tr>
+            <tr>
+                <td>비밀번호</td>
+                <td><input id="pass" type="password" name="userPass"></td>
+            </tr>
+            <tr>
+                <td>비밀번호 확인</td>
+                <td><input id="passCk" type="password"></td>
+            </tr>
+            <tr>
+                <td>별명</td>
+                <td><input id="alias" type="text" name="alias"></td>
+            </tr>
+            <tr>
+                <td colspan="2"><input id="submitBtn" type="button" value="가입하기" onclick="submitToServer()"></td>
+            </tr>
+        </table>
+    </form>
+</body>
+
+</html>
+<script>
+    function submitToServer() {
+        let id = document.getElementById('id').value
+        let pass = document.getElementById('pass').value
+        let passCk = document.getElementById('passCk').value
+        let alias = document.getElementById('alias').value
+        let form = document.getElementById('form')
+
+        if (id == '') {
+            alert('아이디를 입력하세요')
+            return
+        }
+        if (pass == '') {
+            alert('비밀번호를 입력하세요')
+            return
+        }
+        if (passCk == '') {
+            alert('비밀번호 확인을 입력하세요')
+            return
+        }
+        if (alias == '') {
+            alert('별명을 입력하세요')
+            return
+        }
+        if(pass != passCk){
+            alert('비밀번호가 일치하지 않습니다')
+            return
+        }
+
+        form.submit()
+    }
+</script>

@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="https://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>차량 사고 메인 화면</title>
+</head>
+<style>
+
+    /* 시멘틱 태그로 구성한 구조 스타일 */
+
+    #header {
+        height: 50px;
+    }
+
+    #nav {
+        height: 50px;
+        margin-top: 100px;
+    }
+
+    #main {
+<!--        border: 1px solid;-->
+        width: 800px;
+        height: 1000px;
+        margin-left: 0%;
+    //    vertical-align: middle;
+     //   display: inline-block;
+        margin-top: 50px;
+    }
+
+    #adv {
+        /* border: 1px solid; */
+        height: 100px;
+    }
+
+
+    #adv h1 {
+        text-align: center;
+    }
+
+    #footer {
+        height: 100px;
+    }
+
+    /* ----- 세부적인 스타일 설정 ↓ ----- */
+
+    /* _header */
+
+    #header h1 {
+        margin-left: 40%;
+        margin-top: 70px;
+        font-size: 40px;
+    }
+
+    #leftTopImg {
+        position: absolute;
+        margin-left: 20%;
+        margin-top: -2%;
+    }
+
+    #mainTitle {
+        text-decoration: none;
+        color: black;
+    }
+
+    #memberBox {
+        position: absolute;
+        margin-left: 75%;
+        margin-top: -5%;
+    }
+
+    #signIn {
+        background-color: white;
+        border: 1px solid;
+        border-radius: 10px;
+    }
+
+    #signUp {
+        background-color: white;
+        border: 1px solid;
+                border-radius: 10px;
+    }
+
+    #signIn:hover {
+        background-color: gray;
+        color: white;
+    }
+
+    #signUp:hover {
+        background-color: gray;
+        color: white;
+    }
+
+    /* _nav */
+
+    #navMenus {
+        margin-left: 25%;
+    }
+
+    #nav a {
+        font-size: 20px;
+        margin-left: 5%;
+        margin-top: 10px;
+        text-decoration: none;
+        color: rgb(0, 0, 0);
+    }
+
+    #nav a:hover {
+        color: blue;
+    }
+
+    #nav hr {
+        background: rgb(172, 177, 177);
+        height: 1px;
+        border: none;
+    }
+
+    #nav p {
+        text-align: center;
+    }
+
+    /* _main */
+    #hotBulletin {
+        width: 800px;
+        height: 400px;
+        margin: 0 auto;
+        margin-top: 10px;
+        border: 1px solid;
+        border-radius: 10px;
+        border-color: gray;
+    }
+
+    #popularBulletin {
+        width: 800px;
+        height: 500px;
+        margin: 0 auto;
+        margin-top: 10px;
+        border: 1px solid;
+        border-radius: 10px;
+        border-color: gray;
+    }
+
+    #popularMenu {
+        /* position: absolute; */
+        margin-top: 10px;
+        margin-left: 10px;
+    }
+
+    #popularMenu a {
+        margin-left: 20px;
+        text-decoration: none;
+        color: black;
+    }
+
+    #popularMenu a:hover {
+        color: blue;
+    }
+
+    #main h2 {
+        text-align: center;
+    }
+
+    /* _footer */
+
+    #footer p {
+        text-align: center;
+    }
+
+    #footer hr {
+        background: rgb(172, 177, 177);
+        height: 1px;
+        border: none;
+    }
+</style>
+
+<body>
+<div id="header">
+    <img id="leftTopImg" src="https://cdn-icons-png.flaticon.com/512/1576/1576372.png" width="200">
+    <h1>차량 사고 커뮤니티</h1>
+    <div id="memberBox">
+        <div th:if="${session.userAlias} == null">
+            <a href="signInMain"><input id="signIn" type="button" value="로그인" onclick=""></a>
+            <a href="signUpMain"><input id="signUp" type="button" value="회원가입" onclick=""></a>
+        </div>
+        <div th:if="${session.userAlias} != null">
+            <label th:text="${session.userAlias}+'님 환영합니다.'"></label>
+            <a><input type="button" value="로그아웃" onclick="logout()"></a>
+        </div>
+    </div>
+</div>
+<div id="nav">
+    <hr>
+    <div id="navMenus">
+        <a id="free" href="mainFreeBulletin">자유 게시판</a>
+        <!--        <div id="freeDropDown">-->
+        <!--            <p>없음</p>-->
+        <!--            <p>없음</p>-->
+        <!--            <p>없음</p>-->
+        <!--        </div>-->
+        <a id="accident" href="accidentmain">사고 게시판</a>
+        <!--        <div id="accidentDropDown">-->
+        <!--            <p>없음</p>-->
+        <!--            <p>없음</p>-->
+        <!--            <p>없음</p>-->
+        <!--        </div>-->
+        <a id="inquiry" href="inquiry">문의하기</a>
+        <!--        <div id="inquiryDropDown">-->
+        <!--            <p>없음</p>-->
+        <!--            <p>없음</p>-->
+        <!--            <p>없음</p>-->
+        <!--        </div>-->
+        <a id="accidentLocation" href="">지도상 사고난 위치</a>
+        <!--        <div id="accidentLocationDropDown">-->
+        <!--            <p>없음</p>-->
+        <!--            <p>없음</p>-->
+        <!--            <p>없음</p>-->
+        <!--        </div>-->
+    </div>
+    <hr>
+</div>
+<div id="main">
+    <h2>핫한 게시물</h2>
+    <div id="hotBulletin">
+
+    </div>
+    <h2>인기 게시물</h2>
+    <div id="popularBulletin">
+        <div id="popularMenu">
+            <a href="">사고 게시판</a>
+            <a href="">자유 게시판</a>
+        </div>
+    </div>
+</div>
+<div id="adv">
+
+</div>
+<div id="footer">
+    <hr>
+    <p>개발자 이메일 : human@gmail.com / 대표 이름 : human</p>
+</div>
+</body>
+
+</html>
+
+<script>
+    function logout() {
+        location.href = 'logout'
+    }
+</script>

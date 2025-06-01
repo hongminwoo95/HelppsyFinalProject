@@ -2,6 +2,7 @@ package com.cai.helppsy.accidentBulleinBoard.entity;
 
 
 import com.cai.helppsy.accidentBulleinBoard.serviece.CommentService;
+import com.cai.helppsy.main.entity.SinupEntity;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
@@ -13,8 +14,7 @@ import java.util.List;
 @Entity
 public class RegistrationEntity {
 
-
-    @Id // 기본키 지정
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) // 시퀀스 역할 숫자 1씩 증감
     private Integer id; // 저장 번호
 
@@ -40,11 +40,16 @@ public class RegistrationEntity {
     private LocalDateTime createDate; // 로컬 데이터 시간 표기
 
     // 1:N 관계에서 사용
-    @OneToMany(mappedBy = "registrationEntity",cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "registrationEntity",cascade = CascadeType.REMOVE, orphanRemoval = true)
     // mappedBy=참조엔티티속성명 , cascade = CascadeType.REMOVE = 질문을 삭제하면 답변도 같이 삭제되게끔 하는 코드
     private List<RegistrationFileEntity> filelist;
 
-    @OneToMany(mappedBy = "registrationEntity",cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "registrationEntity",cascade = CascadeType.REMOVE, orphanRemoval = true)
     // mappedBy=참조엔티티속성명 , cascade = CascadeType.REMOVE = 질문을 삭제하면 답변도 같이 삭제되게끔 하는 코드
     private List<CommentEntity> CommentEntity;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "sinup_entity_id")
+    // Join되는거 service쪽 fileEntity.setRegistrationEntity(registrationEntity);에서 연결
+    private SinupEntity sinupentity;
 }

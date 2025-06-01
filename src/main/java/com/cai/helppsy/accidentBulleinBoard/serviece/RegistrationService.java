@@ -74,4 +74,9 @@ public class RegistrationService{
     public List<RegistrationFileEntity> getfilename(Integer id){
         return filerepository.findByRegistrationEntity_Id(id);
     }
+
+    // 게시글 삭제하기
+    public void deleteAccident(Integer id){
+        registrationrepository.deleteById(id);
+    }
 }

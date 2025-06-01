@@ -5,6 +5,7 @@ import com.cai.helppsy.accidentBulleinBoard.entity.CommentEntity;
 import com.cai.helppsy.accidentBulleinBoard.entity.RegistrationEntity;
 import com.cai.helppsy.accidentBulleinBoard.repository.CommentRepository;
 import jakarta.servlet.http.HttpSession;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -30,8 +31,21 @@ public class CommentService {
     }
 
     // 외래키 id로 댓글가져오기
-    public Optional<CommentEntity> getComment(Integer FKId){
-        return commentrepository.findById(FKId);
+    public List<CommentEntity> getComment(Integer id){
+        return commentrepository.findByRegistrationEntity_Id(id);
+    }
+
+//    // 외래키 id로 댓글가져오기
+//    public List<CommentEntity> getComment(Integer id){
+//        return commentrepository.findAll();
+//    }
+
+    // id로 사용자 댓글 작성자 가져오기
+
+
+    // 댓글 삭제하기
+    public void deleteComment(Integer id){
+        commentrepository.deleteById(id);
     }
 
 
