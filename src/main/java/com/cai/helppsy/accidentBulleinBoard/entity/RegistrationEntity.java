@@ -40,13 +40,19 @@ public class RegistrationEntity {
     private LocalDateTime createDate; // 로컬 데이터 시간 표기
 
     // 1:N 관계에서 사용
+    // 파일 리스트
     @OneToMany(mappedBy = "registrationEntity",cascade = CascadeType.REMOVE, orphanRemoval = true)
     // mappedBy=참조엔티티속성명 , cascade = CascadeType.REMOVE = 질문을 삭제하면 답변도 같이 삭제되게끔 하는 코드
     private List<RegistrationFileEntity> filelist;
 
+    // 댓글 리스트
     @OneToMany(mappedBy = "registrationEntity",cascade = CascadeType.REMOVE, orphanRemoval = true)
     // mappedBy=참조엔티티속성명 , cascade = CascadeType.REMOVE = 질문을 삭제하면 답변도 같이 삭제되게끔 하는 코드
     private List<CommentEntity> CommentEntity;
+
+    // 좋아요 리스트
+    @OneToMany(mappedBy = "registrationEntity",cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<LikeEntity> likeEntities;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sinup_entity_id")

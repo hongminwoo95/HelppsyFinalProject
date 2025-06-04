@@ -87,7 +87,15 @@
 <div class="container">
     <div class="post-header">
         <h2>게시글 상세보기</h2>
-        <input type="submit" value="좋아요">
+
+
+            <button class="like-btn">
+                <img id="like" src="/LikeImg/LikeFalse.jpeg" alt="좋아요">
+                <input type="hidden" id="UserAlias" th:value="${session.userAlias}">
+            </button>
+
+
+
         <form action="/deleteAccident" method="post">
             <input type="submit" value="게시글삭제">
             <input type="hidden" name="id" th:value="${view.id}" />
@@ -95,7 +103,7 @@
         </form>
     </div>
 
-    <table class="info-table">
+    <table class="info-table" id="table">
         <tr><th>글번호</th><td th:text="${view.id}"></td></tr>
         <tr><th>작성자</th><td th:text="${view.alias}"></td></tr>
         <tr><th>제목</th><td th:text="${view.title}"></td></tr>
@@ -154,86 +162,119 @@
 </div>
 </body>
 </html>
-<script>
-    // 대댓글 입력창 토글
-$(document).on('click', '.commentBtn', function () {
-    const commentId = $(this).data('comment-id');
-    const $commentReply = $('.commentReply[data-comment-id="' + commentId + '"]');  // 대댓글 입력창을 선택
-
-    // 대댓글 입력란을 보이게/숨기게
-    $commentReply.toggle(); // toggle을 이용해 보이거나 숨기기
-});
-
-// 대댓글 목록을 가져오는 로직 (여기서부터는 이미 잘 작성된 것 같음)
-$(document).on('click', '.commentBtn', function () {
-    const commentId = $(this).data('comment-id');
-    const $replyListContainer = $('.reply-list[data-comment-id="' + commentId + '"]');  // 대댓글 목록을 보여줄 곳 찾기
-
-    // 대댓글 목록이 비어 있으면 서버에서 대댓글 목록을 가져옵니다.
-    if ($replyListContainer.is(':empty')) {
+    <script>
+        let liked = false;
+        // 게시글 좋아요 클릭시
+        $(document).on('click', '.like-btn', function () {
+        const table = document.getElementById('table');
+        const registration_entity_id = table.rows[0].cells[1].childNodes[0].textContent; // 게시글 번호
+        const alias = document.getElementById("UserAlias").value; // 세션로그인 별명
         $.ajax({
-            url: '/getReplies',
-            type: 'GET',
-            data: { commentId: commentId },
-            dataType: 'json',
-            success: function (response) {
-                console.log(response); // 응답 데이터를 콘솔로 확인
-
-                // 대댓글 목록을 출력할 HTML을 준비
-                let repliesHtml = '';
-                response.forEach(function (reply) {
-                    repliesHtml += `
-                        <div class="reply">
-                            <strong>${reply.alias}</strong> :
-                            <span>${reply.comment}</span>
-                        </div>
-                    `;
-                });
-
-                // 대댓글 목록을 DOM에 추가
-                $replyListContainer.html(repliesHtml);
-            },
-            error: function () {
-                alert('대댓글을 불러오는 데 실패했습니다.');
-            }
-        });
-    }
-});
-
-// 대댓글 비동기 전송
-    $(document).on('submit', '.comment-reply-form', function (e) {
-        e.preventDefault();
-        // .comment-reply-form폼에 submit 발생하면 이벤트 발생
-        // preventDefault()=페이지 새로고침 실행을 멈춰줌
-        const form = $(this);
-        const data = form.serialize();
-        const commentId = form.data('comment-id');
-
-        $.ajax({
-            url: '/reply', // 실제 컨트롤러 주소
+            url: '/like',
             type: 'POST',
-            data: data,
+            data: {
+                type : "accident",
+                registration_entity_id : registration_entity_id,
+                alias : alias,
+                liked : liked
+            },
             dataType: 'json',
             success: function (response) {
-                console.log("Ajax 응답:", response);
-               // alert('대댓글이 등록되었습니다!');
-                form[0].reset(); // 폼 초기화
+                console.log("좋아요 응답:", response);
 
-                // 대댓글 HTML 생성
-                const replyHtml = `
-                    <div class="reply">
-                        <strong>${response.alias}</strong> :
-                        <span>${response.comment}</span>
-                    </div>
-                `;
-
-                // 해당 댓글의 대댓글 목록 영역에 추가
-                $(`.reply-list[data-comment-id="${response.commentId}"]`).append(replyHtml);
+                // 예시: 좋아요 상태에 따라 이미지 변경
+                if (response.liked === true) {
+                    $('#like').attr('src', '/LikeImg/LikeTrue.jpeg');
+                    liked = true;
+                } else {
+                    $('#like').attr('src', '/LikeImg/LikeFalse.jpeg');
+                    liked = false;
+                }
             },
-            error: function () {
-                alert('대댓글 등록에 실패했습니다.');
+            error: function (error) {
+                console.log('좋아요 요청 실패:', error);
             }
         });
     });
+
+
+
+            // 대댓글 입력창 토글
+        $(document).on('click', '.commentBtn', function () {
+            const commentId = $(this).data('comment-id');
+            const $commentReply = $('.commentReply[data-comment-id="' + commentId + '"]');  // 대댓글 입력창을 선택
+            const $replyListContainer = $('.reply-list[data-comment-id="' + commentId + '"]');  // 대댓글 목록을 보여줄 곳 찾기
+
+            // 대댓글 입력란을 보이게/숨기게
+            $commentReply.toggle(); // toggle을 이용해 보이거나 숨기기
+
+            // 대댓글 목록이 비어 있으면 서버에서 대댓글 목록을 가져옵니다.
+            if ($replyListContainer.is(':empty')) {
+                $.ajax({
+                    url: '/getReplies',
+                    type: 'GET',
+                    data: { commentId: commentId },
+                    dataType: 'json',
+                    success: function (response) {
+                        console.log(response); // 응답 데이터를 콘솔로 확인
+
+                        // 대댓글 목록을 출력할 HTML을 준비
+                        let repliesHtml = '';
+                        response.forEach(function (reply) {
+                            repliesHtml += `
+                                <div class="reply">
+                                    <strong>${reply.alias}</strong> :
+                                    <span>${reply.comment}</span>
+                                </div>
+                            `;
+                        });
+
+                        // 대댓글 목록을 DOM에 추가
+                        $replyListContainer.html(repliesHtml);
+                    },
+                    error: function () {
+                        alert('대댓글을 불러오는 데 실패했습니다.');
+                    }
+                });
+            }
+        });
+
+
+
+        // 대댓글 비동기 전송
+            $(document).on('submit', '.comment-reply-form', function (e) {
+                e.preventDefault();
+                // .comment-reply-form폼에 submit 발생하면 이벤트 발생
+                // preventDefault()=페이지 새로고침 실행을 멈춰줌
+                const form = $(this);
+                const data = form.serialize();
+                const commentId = form.data('comment-id');
+
+                $.ajax({
+                    url: '/reply', // 실제 컨트롤러 주소
+                    type: 'POST',
+                    data: data,
+                    dataType: 'json',
+                    success: function (response) {
+                        console.log("Ajax 응답:", response);
+                       // alert('대댓글이 등록되었습니다!');
+                        form[0].reset(); // 폼 초기화
+
+                        // 대댓글 HTML 생성
+                        const replyHtml = `
+                            <div class="reply">
+                                <strong>${response.alias}</strong> :
+                                <span>${response.comment}</span>
+                            </div>
+                        `;
+
+                        // 해당 댓글의 대댓글 목록 영역에 추가
+                        $(`.reply-list[data-comment-id="${response.commentId}"]`).append(replyHtml);
+                    },
+                    error: function () {
+                        alert('대댓글 등록에 실패했습니다.');
+                    }
+                });
+            });
 
 </script>

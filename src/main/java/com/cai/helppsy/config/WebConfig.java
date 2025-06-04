@@ -20,5 +20,8 @@ public class WebConfig implements WebMvcConfigurer {
                 .addResourceLocations("file:" + fileUploadPath+"accidentBulletin/");
         registry.addResourceHandler("/files/inquiry/**")
                 .addResourceLocations("file:" + fileUploadPath+"inquiry/");
+        // 좋아요 이미지 맵핑
+        registry.addResourceHandler("/LikeImg/**")
+                .addResourceLocations("classpath:/static/LikeImg/");
     }
 }
