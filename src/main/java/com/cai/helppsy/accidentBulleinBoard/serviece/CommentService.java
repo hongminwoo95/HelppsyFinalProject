@@ -46,6 +46,7 @@ public class CommentService {
     // 댓글 삭제하기
     public void deleteComment(Integer id){
         commentrepository.deleteById(id);
+        // Repository에 있는 메서드라 Repository에 따로 작성하지 않아도 됩니다
     }
 
 
