@@ -2,17 +2,11 @@ package com.cai.helppsy.accidentBulleinBoard.controller;
 
 
 import com.cai.helppsy.accidentBulleinBoard.entity.CommentEntity;
-import com.cai.helppsy.accidentBulleinBoard.entity.RegistrationEntity;
 import com.cai.helppsy.accidentBulleinBoard.serviece.CommentService;
-import com.cai.helppsy.accidentBulleinBoard.serviece.RegistrationService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
@@ -37,13 +31,6 @@ public class CommentContorller {
             , @RequestParam("userAlias") String userAlias
             ,@RequestParam("registrationId") Integer registration_entity_id
             ,HttpSession session) {
-        System.out.println("삭제하기 들어왔니?????");
-
-        System.out.println("------------------------댓글삭제는 여기서 확인하세용");
-        System.out.println(id+"=댓글작성번호");
-        System.out.println(userAlias);
-        System.out.println(registration_entity_id);
-        System.out.println("------------------------if문 확인하기");
         if(session.getAttribute("userAlias").equals(userAlias)){
             commentservice.deleteComment(id);
         }

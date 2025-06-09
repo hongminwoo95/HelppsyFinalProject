@@ -24,6 +24,10 @@ public class CommentEntity {
     @JoinColumn(name = "registration_entity_id", nullable = false)
     private RegistrationEntity registrationEntity;
 
+    // 댓글 좋아요 1:N 관계 성립 (기본키)
+    @OneToMany(mappedBy = "commentEntity", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<CommentLikeEntity> CommentLikeEntity;
+
     // 대댓글에 1:N 관계 성립 (기본키)
     @OneToMany(mappedBy = "commentEntity", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<CommentReplyEntity> reply;

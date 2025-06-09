@@ -1,7 +1,6 @@
 package com.cai.helppsy.accidentBulleinBoard.entity;
 
 
-import com.cai.helppsy.accidentBulleinBoard.serviece.CommentService;
 import com.cai.helppsy.main.entity.SinupEntity;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -36,6 +35,9 @@ public class RegistrationEntity {
     @Column(length = 15)
     private String type; // 차종류
 
+    @Column(nullable = false) // nullable = false : null 방지
+    private Integer postViews = 0; // 조회수
+
     @CreationTimestamp
     private LocalDateTime createDate; // 로컬 데이터 시간 표기
 
@@ -52,7 +54,7 @@ public class RegistrationEntity {
 
     // 좋아요 리스트
     @OneToMany(mappedBy = "registrationEntity",cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private List<LikeEntity> likeEntities;
+    private List<RegistrationLikeEntity> likeEntities;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sinup_entity_id")

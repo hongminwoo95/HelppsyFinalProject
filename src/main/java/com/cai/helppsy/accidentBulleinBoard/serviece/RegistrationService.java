@@ -5,6 +5,7 @@ import com.cai.helppsy.accidentBulleinBoard.entity.RegistrationEntity;
 import com.cai.helppsy.accidentBulleinBoard.entity.RegistrationFileEntity;
 import com.cai.helppsy.accidentBulleinBoard.repository.RegistrationFileRepository;
 import com.cai.helppsy.accidentBulleinBoard.repository.RegistrationRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,7 +18,7 @@ import java.util.UUID;
 
 @RequiredArgsConstructor
 @Service
-public class RegistrationService{
+public class RegistrationService {
 
     private final RegistrationRepository registrationrepository; //일반 작성글
     private final RegistrationFileRepository filerepository; //파일
@@ -78,5 +79,32 @@ public class RegistrationService{
     // 게시글 삭제하기
     public void deleteAccident(Integer id){
         registrationrepository.deleteById(id);
+    }
+
+    // 게시글 조회수 메인리스트 --  (비동기처리)
+    @Transactional
+    // 메서드 내에서 발생하는 DB 작업들을 하나의 트랜잭션으로 묶어줌 (2가지 이상의 트랜잭션 발생시 1개의 트랜잭션으로 작업)
+    // 작업 도중 에러가 발생하면 전체 롤백(되돌림), 성공하면 모두 커밋(반영).
+    public Integer PostView(Integer postId) {
+        Optional<RegistrationEntity> postviewsNum = registrationrepository.findById(postId);
+        if (postviewsNum.isPresent()) { // .isPresent() = 객체의 값이 있다면 / 반대 .isEmpty()는 값이 없다면 암기!
+            RegistrationEntity entity = postviewsNum.get(); // 해당 id가 있는 튜플을 entity객체에 저장
+            entity.setPostViews(entity.getPostViews() + 1); // 현재 조회수에서 +1 값으로 수정
+            registrationrepository.save(entity); // 수정된 조회수를 최종적으로 다시 저장
+            return entity.getPostViews(); // 증가된 조회수 반환
+        }
+        return null;
+    }
+
+    // 게시글 상세보기 조회수 --  (동기) 비동기 로직 재활용 +1만 삭제
+    public Integer getPostView(Integer postId) {
+        Optional<RegistrationEntity> postviewsNum = registrationrepository.findById(postId);
+        if (postviewsNum.isPresent()) { // .isPresent() = 객체의 값이 있다면 / 반대 .isEmpty()는 값이 없다면 암기!
+            RegistrationEntity entity = postviewsNum.get(); // 해당 id가 있는 튜플을 entity객체에 저장
+            entity.setPostViews(entity.getPostViews()); // 현재 조회수에서 +1 값으로 수정
+            registrationrepository.save(entity); // 수정된 조회수를 최종적으로 다시 저장
+            return entity.getPostViews(); // 증가된 조회수 반환
+        }
+        return null;
     }
 }

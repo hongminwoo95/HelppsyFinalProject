@@ -4,6 +4,8 @@ package com.cai.helppsy.accidentBulleinBoard.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 @Entity
 public class CommentReplyEntity {
@@ -17,6 +19,10 @@ public class CommentReplyEntity {
 
     @Column(length = 15)
     private String alias; // 로그인한 사용자 별명
+
+    // 대댓글 좋아요에 1:N 관계 성립 (기본키)
+    @OneToMany(mappedBy = "commentReplyEntity", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<CommentReplyLikeEntity> replylike;
 
     //  등록 글과의 연관관계 매핑
     @ManyToOne(fetch = FetchType.LAZY)

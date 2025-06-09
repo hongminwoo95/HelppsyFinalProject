@@ -1,7 +1,6 @@
 package com.cai.helppsy.main.entity;
 
 
-import com.cai.helppsy.accidentBulleinBoard.entity.CommentEntity;
 import com.cai.helppsy.accidentBulleinBoard.entity.RegistrationEntity;
 import jakarta.persistence.*;
 import lombok.Data;

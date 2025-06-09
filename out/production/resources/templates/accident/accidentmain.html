@@ -75,6 +75,7 @@
         }
     </style>
 </head>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <body>
 <h3>사고 게시판</h3>
 
@@ -92,15 +93,37 @@
         <th>제목</th>
         <th>작성자</th>
         <th>작성일</th>
+        <th>조회수</th>
     </tr>
     <tr th:each="list : ${writegetlist}">
         <td th:text="${list.id}"></td>
-            <td >
-                <a th:href="@{'/accidentview/' + ${list.id}}" th:text="${list.title}"></a>
+            <td>
+                <a th:href="@{'/accidentview/' + ${list.id}}" th:text="${list.title}"
+                   th:attr="data-post-id=${list.id}" class="post-title"></a>
             </td>
         <td th:text="${list.alias}"></td>
         <td th:text="${#temporals.format(list.createDate, 'yyyy-MM-dd HH:mm')}"></td>
+        <td class="Views-list" th:attr="id='views-' + ${list.id}" th:text="${list.postViews}"></td>
     </tr>
 </table>
 </body>
 </html>
+<script>
+    // 게시글 조회수 (게시글리스트 제목 클릭시 조회수 측정)
+   $(document).on('click', '.post-title', function (e) {
+        const postId = $(this).data('post-id');
+
+        $.ajax({
+            url: '/Accident/Views',
+            type: 'POST',
+            data: { postId: postId },
+            success: function (updatedViews) {
+                // 조회수 셀 업데이트
+                $(`#views-${postId}`).text(updatedViews);
+            },
+            error: function () {
+                alert('조회수 증가에 실패했습니다.');
+            }
+        });
+    });
+</script>

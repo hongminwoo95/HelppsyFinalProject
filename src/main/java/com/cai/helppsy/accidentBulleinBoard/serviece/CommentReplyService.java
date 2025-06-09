@@ -30,8 +30,12 @@ public class CommentReplyService {
         commententity.setCommentEntity(commentEntity);
         // 2.대댓글 내용을 DB에 저장하고 변수에 대입
         CommentReplyEntity Repl = commentReplyRepository.save(commententity);
-
         return Repl;
+    }
+
+    // 대댓글 삭제
+    public void deleteCommentReply(Integer id){
+        commentReplyRepository.deleteById(id);
     }
 
 }
