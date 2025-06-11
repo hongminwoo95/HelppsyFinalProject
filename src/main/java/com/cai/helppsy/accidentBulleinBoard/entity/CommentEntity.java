@@ -31,5 +31,4 @@ public class CommentEntity {
     // 대댓글에 1:N 관계 성립 (기본키)
     @OneToMany(mappedBy = "commentEntity", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<CommentReplyEntity> reply;
-
 }

@@ -5,41 +5,72 @@ import lombok.RequiredArgsConstructor;
 import java.util.ArrayList;
 import java.util.List;
 
-@RequiredArgsConstructor
 public class Paging {
+    private List perPageList;
+    private List<Integer> allPageNums;
+    private int allPageNumCnt;
+    private List<Integer> currentPageNums;
+    private int pageNumSetCnt;
+    
+    public List getPerPageList(){return perPageList;}
+    public List<Integer> getAllPageNums(){return allPageNums;}
+    public int getAllPageNumCnt(){return allPageNumCnt;}
+    public List<Integer> getCurrentPageNums(){return currentPageNums;}
+    public int getPageNumSetCnt(){return pageNumSetCnt;}
 
-    public static List pagingList(int CntOfOnePage, int page, List list) {
-        List responseList = new ArrayList();
+    public void setPerPageList(int perPageListCnt, int pageNum, int currentPageNumsetNum, int perPageNumCnt, List list){
+        List perPageList = new ArrayList<>();
+        int cnt = 0;
 
-        int initialValue = list.size() - 1 -(page-1)*CntOfOnePage;
-        int condition = initialValue-(CntOfOnePage-1);
+        int initialValue = list.size() - 1 -(pageNum-1)*perPageListCnt;
+        int condition = initialValue-perPageListCnt;
 
-        for(int i = initialValue ; i >= condition && i >= 0; i--){
-            responseList.add(list.get(i));
+        for(int i = initialValue ; i > condition && i >= 0; i--){
+            perPageList.add(list.get(i));
         }
 
-        return responseList;
+        this.perPageList = perPageList;
+
+        double a = list.size()/(double)perPageListCnt;
+        int b = (int)a;
+
+        if(a == b){
+            allPageNumCnt = b;
+        }else if(a > b){
+            allPageNumCnt = ++b;
+        }
+
+        allPageNums = new ArrayList<>();
+
+        for(int i = 0; i < allPageNumCnt; i++){
+            allPageNums.add(i+1);
+        }
+        
+        double c = allPageNumCnt/(double)perPageNumCnt;
+        int d = (int)c;
+        
+        if(c == d){
+            pageNumSetCnt = d;
+        }else if(c > d){
+            pageNumSetCnt = ++d;
+        }
+
+        currentPageNums = new ArrayList<>();
+
+        int currentPageNumInitialValue = (currentPageNumsetNum-1)*perPageNumCnt+1;
+        int currentPageNumConditionV = currentPageNumsetNum*perPageNumCnt;
+
+        System.out.println("______________________________55_________________________________");
+        System.out.println(pageNumSetCnt);
+        System.out.println(perPageNumCnt);
+        System.out.println(currentPageNumInitialValue);
+        System.out.println(currentPageNumConditionV);
+        System.out.println("______________________________55_________________________________");
+
+        for(int i = currentPageNumInitialValue; i <= currentPageNumConditionV && i <= allPageNumCnt; i++){
+            currentPageNums.add(i);
+            System.out.println(i);
+        }
     }
 
-    public static List<Integer> cnt(int CntOfOnePage, List list){
-        List<Integer> pages = new ArrayList<>();
-        int cnt = list.size();
-
-        int intNUm = cnt/CntOfOnePage;
-        double doubleNum = (double)cnt/CntOfOnePage;
-
-        int repeatNum = 0;
-
-        if(doubleNum > intNUm){
-            repeatNum = intNUm+1;
-        } else if (doubleNum == intNUm) {
-            repeatNum = intNUm;
-        }
-
-        for(int i = 0; i<repeatNum; i++){
-            pages.add(i+1);
-        }
-
-        return pages;
-    }
 }

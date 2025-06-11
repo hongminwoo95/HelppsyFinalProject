@@ -28,5 +28,4 @@ public class CommentReplyEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "comment_entity_id", nullable = false)
     private CommentEntity commentEntity;
-
 }

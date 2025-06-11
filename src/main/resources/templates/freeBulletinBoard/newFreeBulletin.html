@@ -106,9 +106,10 @@
         <h1>자유 게시판 작성</h1>
     </header>
     <main>
-        <form onsubmit="return false" id="bulletinForm" enctype="multipart/form-data" action="addFreeBulletinBoard"
+        <form onsubmit="return false" id="bulletinForm" enctype="multipart/form-data" action="addFreeBulletin"
             method="post">
             <p id="titleWord">제목 :</p>
+            <input id="111" type="hidden" th:value="${session.userAlias}" name="currentUserName">
             <input id="titleTxt" name="title" type="text" placeholder="제목을 입력하세요">
             <p id="contentWord">내용 :</p>
             <textarea id="contentTxt" name="content" placeholder="내용을 입력하세요"></textarea>

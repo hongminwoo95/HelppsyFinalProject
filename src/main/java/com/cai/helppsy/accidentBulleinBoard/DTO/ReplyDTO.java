@@ -1,8 +1,10 @@
 package com.cai.helppsy.accidentBulleinBoard.DTO;
 
+import lombok.Data;
 import lombok.Getter;
 
-@Getter
+//@Data     // yoonbin
+@Getter     // minwoo
 public class ReplyDTO {
     private Integer id; // 대댓글 순서번호
     private String comment; // 대댓글 내용

@@ -1,7 +1,6 @@
 package com.cai.helppsy.accidentBulleinBoard.repository;
 
 
-import com.cai.helppsy.accidentBulleinBoard.entity.CommentEntity;
 import com.cai.helppsy.accidentBulleinBoard.entity.CommentLikeEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 

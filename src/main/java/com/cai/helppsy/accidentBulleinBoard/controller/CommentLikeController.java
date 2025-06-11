@@ -1,7 +1,7 @@
 package com.cai.helppsy.accidentBulleinBoard.controller;
 
 import com.cai.helppsy.accidentBulleinBoard.DTO.CommentLikeDTO;
-import com.cai.helppsy.accidentBulleinBoard.serviece.CommentLikeService;
+import com.cai.helppsy.accidentBulleinBoard.service.CommentLikeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -43,10 +43,6 @@ public class CommentLikeController {
     public Map<String, Object> Commentlikerevert
             (@RequestParam("CommentUserAlias") String alias,@RequestParam("commentId") Integer commentId)                                           {
 
-        System.out.println("------------------------댓글좋아요 새로고침 여기확인");
-        System.out.println(alias);
-        System.out.println(commentId);
-        System.out.println("------------------------댓글좋아요 새로고침 여기확인");
         int CommentlikedStatus = commentLikeService.getCommentLike(alias,commentId);
         int CommentlikeCount = commentLikeService.LikeCountByPostId(commentId); // 좋아요 총 개수
 

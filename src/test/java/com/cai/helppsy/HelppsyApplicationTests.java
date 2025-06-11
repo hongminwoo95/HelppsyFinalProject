@@ -1,14 +1,13 @@
 package com.cai.helppsy;
 
-import com.cai.helppsy.freeBulletinBoard.entity.Bulletin;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @SpringBootTest
 class HelppsyApplicationTests {
+	@Autowired
+	private BulletinRepository bulletinRepository;
 
 	@Test
 	void contextLoads() {
@@ -17,14 +16,18 @@ class HelppsyApplicationTests {
 		System.out.println("______________________________________________");
 	}
 
-//	@Test
-//	void pagingTest(){
-//		List<Bulletin> a = new ArrayList<>();
-//
-//		for(int i = 0; i < 10; i++){
-//			Bulletin b = new Bulletin();
-//			b.set
-//			a.add(new )
-//		}
-//	}
+	@Test
+	void pagingTest(){
+		for(int i = 0; i < 100; i++){
+			bulletinRepository.save(new Bulletin());
+		}
+	}
+
+	@Test
+	void pagingTest2(){
+
+		System.out.println("__________________");
+
+		System.out.println("__________________");
+	}
 }

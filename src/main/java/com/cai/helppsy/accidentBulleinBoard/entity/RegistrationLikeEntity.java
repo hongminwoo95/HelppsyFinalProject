@@ -21,6 +21,7 @@ public class RegistrationLikeEntity {
     @Column(length = 15)
     private int liked; // 좋아요 현재 상태
 
+
     //  등록 글과의 연관관계 매핑
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "registration_entity_id", nullable = false)

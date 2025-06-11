@@ -1,7 +1,7 @@
 package com.cai.helppsy.accidentBulleinBoard.entity;
 
 
-import com.cai.helppsy.main.entity.SinupEntity;
+import com.cai.helppsy.memberManager.SignupEntity;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
@@ -35,6 +35,9 @@ public class RegistrationEntity {
     @Column(length = 15)
     private String type; // 차종류
 
+    @Column(columnDefinition = "LONGTEXT")
+    private String content; // 내용
+
     @Column(nullable = false) // nullable = false : null 방지
     private Integer postViews = 0; // 조회수
 
@@ -57,7 +60,7 @@ public class RegistrationEntity {
     private List<RegistrationLikeEntity> likeEntities;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "sinup_entity_id")
+    @JoinColumn(name = "singup_entity_id")
     // Join되는거 service쪽 fileEntity.setRegistrationEntity(registrationEntity);에서 연결
-    private SinupEntity sinupentity;
+    private SignupEntity signupEntity;
 }

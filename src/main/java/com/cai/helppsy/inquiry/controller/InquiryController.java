@@ -33,13 +33,11 @@ public class InquiryController {
                       @RequestParam("subject") String subject,
                       @RequestParam("content") String content,
                       @RequestParam("file") MultipartFile file) throws IOException {
-
         Question question = new Question();
         question.setWriter(writer);
         question.setSubject(subject);
         question.setContent(content);
         question.setCreateDate(LocalDateTime.now());
-
         if (!file.isEmpty()) {
             UUID uuid = UUID.randomUUID();
             String upload = System.getProperty("user.dir") + "/files/inquiry"; // 현재 경로 + "/upload/"
@@ -54,7 +52,6 @@ public class InquiryController {
         q1.save(question);
         return "redirect:/inquiry";
     }
-
 
     @GetMapping("respondent")   // 문의 답변전체 페이지
     public String listUsers(Model model) {
@@ -81,13 +78,10 @@ public class InquiryController {
                 Question question = q1.findById(qid).orElse(null);
                 A.setQuestion(question);
             }
-
             a1.save(A);
         }
-
         return "redirect:/respondent";
     }
-
 
     @PostMapping("delete")
     public String delete(@RequestParam(value = "ids", required = false) List<Integer> ids) {
@@ -97,22 +91,16 @@ public class InquiryController {
         return "redirect:/respondent";
     }
 
-
     @GetMapping("/question/{id}")   //해당 id 문의 자세히 보기 페이지
     public String questionDetail(@PathVariable("id") Integer id, Model model) {
         Question question = q1.findById(id).orElse(null);
-
         if (question == null) {
             // 존재하지 않는 질문이면 목록으로 리다이렉트
             return "redirect:/respondent";
         }
-
         List<Answer> answerList = a1.findByQuestionId(id);
-
         model.addAttribute("question", question);
         model.addAttribute("answers",answerList);
         return "inquiry/question_detail";
     }
-
-
 }

@@ -3,9 +3,10 @@ package com.cai.helppsy.accidentBulleinBoard.controller;
 import com.cai.helppsy.accidentBulleinBoard.entity.CommentEntity;
 import com.cai.helppsy.accidentBulleinBoard.entity.RegistrationEntity;
 import com.cai.helppsy.accidentBulleinBoard.entity.RegistrationFileEntity;
-import com.cai.helppsy.accidentBulleinBoard.serviece.CommentService;
-import com.cai.helppsy.accidentBulleinBoard.serviece.RegistrationLikeService;
-import com.cai.helppsy.accidentBulleinBoard.serviece.RegistrationService;
+import com.cai.helppsy.accidentBulleinBoard.service.CommentService;
+import com.cai.helppsy.accidentBulleinBoard.service.RegistrationLikeService;
+import com.cai.helppsy.accidentBulleinBoard.service.RegistrationService;
+import com.cai.helppsy.tools.Paging;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -38,20 +39,35 @@ public class RegistrationController {
 
     // 사고 게시판 작성글 db업로드
     @PostMapping("/registration")
-    public String writing(@ModelAttribute RegistrationEntity registrationEntity
-            ,@RequestParam("file") MultipartFile[] file) throws Exception {
+    public String writing(@ModelAttribute RegistrationEntity registrationEntity){
+        System.out.println("--------------------사고 게시판 작성글 ");
+        System.out.println("아이디 =" + registrationEntity.getAccident());
+        System.out.println(registrationEntity.getContent());
+        // ,@RequestParam("file") MultipartFile[] file) throws Exception {
 //        registrationEntity.setAlias(session.getAttribute("userAlias").toString());
         // session.getAttribute("userAlias").toString() 세션에 저장되어있는 별명을 바로 엔티티에 저장
         registrationService.write(registrationEntity); // 작성글 서비스단 보내기
-        registrationService.files(file, registrationEntity); // 사진 서비스단 보내기
+//        registrationService.files(file, registrationEntity); // 사진 서비스단 보내기
         return "redirect:/return";
     }
 
     // db업로드 리스트 전체출력
     @GetMapping("/return")
-    public String list(Model model) {
+    public String list(Model model, @RequestParam(value = "page", defaultValue = "1") int page,
+            @RequestParam(value = "currentPageNum", defaultValue = "1") int currentPageNum) {
         List<RegistrationEntity> writegetlist = registrationService.writegetlist();
         model.addAttribute("writegetlist", writegetlist);
+
+        // 페이징
+        Paging paging = new Paging();
+        paging.setPerPageList(10, page, currentPageNum, 5, writegetlist);
+        model.addAttribute("perPageList", paging.getPerPageList());
+        model.addAttribute("allPageNumCnt", paging.getAllPageNumCnt());
+        model.addAttribute("currentPageNums", paging.getCurrentPageNums());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("currentPageNum", currentPageNum);
+        model.addAttribute("pageNumSetCnt", paging.getPageNumSetCnt());
+
         return "accident/accidentmain";
     }
 
@@ -97,11 +113,6 @@ public class RegistrationController {
         }
         return "redirect:/return";
     }
-
-    // 게시글 수정하기
-
-
-
 
     // 게시글 조회수
     @PostMapping("/Accident/Views")
