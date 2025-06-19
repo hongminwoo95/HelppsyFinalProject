@@ -34,4 +34,14 @@ public class CommentContorller {
         }
         return "redirect:/accidentview/" + registration_entity_id;
     }
+
+    // 댓글 수정하기
+    @PostMapping("/commentEdit")
+    public String commentEdit(@RequestParam("commentEdit") String commentEdit,
+                                @RequestParam("commentEditId") Integer commentEditId,
+                              @RequestParam("commentEditAlias") String commentEditAlias,
+                              @RequestParam("registrationId") Integer registrationId){
+        CommentEntity UpdateComment = commentservice.UpdateComment(commentEdit,commentEditId,commentEditAlias);
+        return "redirect:/accidentview/" + registrationId;
+    }
 }

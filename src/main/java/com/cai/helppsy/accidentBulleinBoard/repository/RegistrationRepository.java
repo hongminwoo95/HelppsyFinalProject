@@ -9,4 +9,5 @@ import java.util.Optional;
 public interface RegistrationRepository extends JpaRepository<RegistrationEntity,Integer> {
     List<RegistrationEntity> findAll(); // 전체출력
     Optional<RegistrationEntity> findById(Integer id); // id로 조회하기
+    Optional<RegistrationEntity> findByIdAndAlias(Integer id, String alias); // 게시물 수정
 }
