@@ -21,29 +21,35 @@ public class RegistrationEntity {
     @Column(length = 50)
     private String title; // 제목
 
+    @Column(columnDefinition = "TEXT")
+    private String Preview; // 미리보기 글
+
+    @Column(columnDefinition = "MEDIUMTEXT")
+    private String MainImg; // 썸네일 이미지
+
     @Column(length = 15)
     private String alias; // 로그인한 사용자 별명
 
     @Column(length = 30)
-    private String accident; // 사고분류
+    private String accident; // 제보카테고리
+
+    @Column(length = 30)
+    private String distinction; // 제보 분류
 
     @Column(length = 50)
-    private String region; // 지역
+    private String region; // 제보지역
+
+    @Column(length = 15)
+    private String type; // 제보상세위치
+
+    @Column(columnDefinition = "LONGTEXT")
+    private String content; // 내용
 
     @Column(length = 30)
     private String latitude; // 지도(위도)
 
     @Column(length = 30)
     private String longitude; // 지도(경도)
-
-    @Column(length = 15)
-    private String rating; // 차등급(크기)
-
-    @Column(length = 15)
-    private String type; // 차종류
-
-    @Column(columnDefinition = "LONGTEXT")
-    private String content; // 내용
 
     @Column(nullable = false) // nullable = false : null 방지
     private Integer postViews = 0; // 조회수

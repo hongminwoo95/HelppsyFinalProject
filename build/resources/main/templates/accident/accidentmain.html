@@ -79,19 +79,6 @@
         td:nth-child(3) {
             width: 100px;
         }
-
-    .active {
-    margin-bottom: 10px;
-    padding : 6px;
-    background-color: rgba(138, 152, 98, 0.1);
-    border-color: rgba(138, 152, 98, 0.1);
-    }
-
-    .page-num{
-        background-color: rgba(138, 152, 98, 0.1);
-        border-color: rgba(138, 152, 98, 0.1);
-    }
-    </style>
     </style>
 </head>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -109,7 +96,6 @@
 
 
     <table>
-
         <tr>
             <th>번호</th>
             <th>제목</th>
@@ -117,33 +103,8 @@
             <th>작성일</th>
             <th>조회수</th>
         </tr>
-
-        <!-- 테이블 안 -->
-        <tr th:each="list : ${pagedResult.content}"> <!-- 현재 페이지의 데이터만 가져옴 -->
-            <td th:text="${list.id}" class="ListId"></td>
-
-            <td>
-                <!-- 게시글 상세 페이지 링크 -->
-                <a th:href="@{'/accidentview/' + ${list.id}}"
-                   th:text="${list.title}"
-                   th:attr="data-post-id=${list.id}"
-                   class="post-title"></a>
-            </td>
-
-            <!-- 작성자 닉네임 -->
-            <td>
-                <a th:href="@{'/profile?alias=' + ${list.alias}}" th:text="${list.alias}"></a>
-            </td>
-
-            <!-- 작성일 -->
-            <td th:text="${#temporals.format(list.createDate, 'yyyy-MM-dd HH:mm')}"></td>
-
-            <!-- 조회수 -->
-            <td class="Views-list" th:attr="id='views-' + ${list.id}" th:text="${list.postViews}"></td>
-        </tr>
-
-       <!-- <tr th:each="list : ${writegetlist}">  ( 기존 전체출력 )
-                 // <tr th:each="list : ${perPageList}"></tr>
+        <tr th:each="list : ${writegetlist}">
+            <!--        <tr th:each="list : ${perPageList}"></tr>-->
             <td th:text="${list.id}" class="ListId"></td>
             <td>
                 <a th:href="@{'/accidentview/' + ${list.id}}" th:text="${list.title}" th:attr="data-post-id=${list.id}"
@@ -152,44 +113,21 @@
             <td><a th:href="@{'/profile?alias=' + ${list.alias}}" th:text="${list.alias}"></a></td>
             <td th:text="${#temporals.format(list.createDate, 'yyyy-MM-dd HH:mm')}"></td>
             <td class="Views-list" th:attr="id='views-' + ${list.id}" th:text="${list.postViews}"></td>
-        </tr> -->
+        </tr>
     </table>
 
-    <nav aria-label="Page navigation">
+    <!-- 페이징 버튼 -->
+    <nav aria-label="Page navigation example">
         <ul class="pagination justify-content-center">
-            <!-- h:classappend="${currentPage == 0} ? 'disabled'"> currentPage == 0일 경우 "disabled" 클래스를 붙여라.-->
-            <!-- th:unless 역할: 조건이 false일 때만 HTML 요소를 출력 currentPage > 0이 false인 경우에만 이
-            <a> 태그가 HTML에 렌더링됨. 즉, 첫 페이지일 때만 Previous 버튼이 비활성 상태로 보임. -->
-
-            <!-- 이전 버튼 -->
-            <li class="page-num" th:classappend="${currentPage == 0} ? 'disabled'">
-                <a class="page-link"
-                   th:href="@{'/return'(page=${currentPage - 1})}"
-                   th:if="${currentPage > 0}" ><</a>
+            <li class="page-item disabled">
+                <a class="page-link">Previous</a>
             </li>
-            <!-- <li>현재 페이지가 0일때 이전 버튼을 비활성화
-                 <a>클릭시 현재페이지의 -1
-                 현재페이지가 0보다 클때 (클릭가능)
-                 현재페이지가 0보다 크지 않을때 -->
-
-            <!-- 페이지 번호 -->
-            <li class="page-item"
-                th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
-                th:classappend="${i == currentPage} ? 'active'">
-                <a class="page-link" th:href="@{'/return'(page=${i})}" th:text="${i + 1}"></a>
+            <li class="page-item"><a class="page-link" href="#">1</a></li>
+            <li class="page-item"><a class="page-link" href="#">2</a></li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <li class="page-item">
+                <a class="page-link" href="#">Next</a>
             </li>
-            <!-- i에 0 ~ (전체페이지수 -1)일때 까지 반복출력
-                 // #numbers는 숫자 관련 유틸리티를 제공하는 내장 객체로, sequence() 메서드를 통해 특정 범위의 숫자 시퀀스를 생성
-                 i가 현재페이지와 같을떄 active로 클래스는 현재 페이지임을 강조
-                 클릭시 현재 페이지 나타남, 텍스트표현은 현재페이지 +1 -->
-
-            <!-- 다음 버튼 -->
-            <li class="page-num" th:classappend="${currentPage == totalPages - 1} ? 'disabled'">
-                <a class="page-link"
-                   th:href="@{'/return'(page=${currentPage + 1})}"
-                   th:if="${currentPage < totalPages - 1}">></a>
-            </li>
-
         </ul>
     </nav>
 

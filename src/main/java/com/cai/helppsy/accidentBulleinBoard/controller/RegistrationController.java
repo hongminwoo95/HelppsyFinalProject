@@ -129,6 +129,8 @@ public class RegistrationController {
         System.out.println("---------------------------게시글 수정하기 여기보자");
         System.out.println(Update.getId());
         System.out.println(Update.getAlias());
+        System.out.println(Update.getContent());
+        System.out.println(Update.getPreview());
         System.out.println("---------------------------게시글 수정하기 여기보자");
         model.addAttribute("Update", Update);
         return "accident/UpdateWriting";
@@ -137,7 +139,12 @@ public class RegistrationController {
     // 게시글 수정하기
     @PostMapping("/UpdateAccident")
     public String UpdateAccident(@ModelAttribute RegistrationEntity Data){ // 게시글 entity객체로 받기
+        System.out.println("------------------------ 지금 여기확인해라");
+        System.out.println("수정글번호 : " + Data.getId());
+        System.out.println("수정내용 : " + Data.getContent());
+        System.out.println("------------------------ 지금 여기확인해라");
         RegistrationEntity entity = registrationService.UpdateAccident(Data);
+
         return "redirect:/accidentview/" + Data.getId();
     }
 
@@ -164,7 +171,9 @@ public class RegistrationController {
 
         // 전체 페이지 수
         model.addAttribute("totalPages", pagedResult.getTotalPages());
-
+        System.out.println("--------------");
+        System.out.println("들어왔냐?");
+        System.out.println("--------------");
         return "accident/accidentmain";
     }
 

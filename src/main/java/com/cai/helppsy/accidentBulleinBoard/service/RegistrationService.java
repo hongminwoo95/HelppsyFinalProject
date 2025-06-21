@@ -113,6 +113,9 @@ public class RegistrationService{
     // JPA에서는 findById()로 가져온 객체는 영속 상태(Persistent) 이므로, 수정 후 save() 호출하면 변경이 DB에 반영.
     // **변경 감지(Dirty Checking)**로 내부적으로 UPDATE SQL 실행
     public RegistrationEntity UpdateAccident(RegistrationEntity Data){
+
+        System.out.println(Data.getMainImg());
+
         // Optional로 감싼 객체는 entity로 바로접근이 불가
         // Optional<RegistrationEntity> entity = registrationrepository.findById(Data.getId());
         RegistrationEntity entity = registrationrepository.findById(Data.getId())
@@ -121,12 +124,16 @@ public class RegistrationService{
 
         // JAP가 변경을 감지
         entity.setTitle(Data.getTitle()); // 제목
-        entity.setAccident(Data.getAccident()); // 사고분류
-        entity.setRegion(Data.getRegion()); // 사고지역
-        entity.setType(Data.getType()); // 차 종류
+        entity.setPreview(Data.getPreview()); // 미리보기 글
+        entity.setMainImg(Data.getMainImg()); // 썸네일 이미지
+        entity.setAccident(Data.getAccident()); // 제보 카테고리
+        entity.setDistinction(Data.getDistinction()); // 제보 분류
+        entity.setRegion(Data.getRegion()); // 제보지역
+        entity.setType(Data.getType()); // 제보상세위치
         entity.setContent(Data.getContent()); // 내용
         entity.setLatitude(Data.getLatitude()); // 위도
         entity.setLongitude(Data.getLongitude()); // 경도
+
 
         return registrationrepository.save(entity);
     }

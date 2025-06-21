@@ -6,10 +6,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
 class HelppsyApplicationTests {
-
 	@Test
 	void contextLoads() {
 		// 스프링 컨텍스트가 정상 로딩되는지만 확인
 	}
-
 }
