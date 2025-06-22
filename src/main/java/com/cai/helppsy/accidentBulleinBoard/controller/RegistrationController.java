@@ -150,31 +150,52 @@ public class RegistrationController {
 
     // JPA활용 Pageing
     @GetMapping("/return")
-    public String list(@RequestParam(defaultValue = "0") int page,  // 현재 페이지 번호 (0부터 시작)
-                       @RequestParam(defaultValue = "10") int size, // 한 페이지에 보여줄 개수
+    public String list(@RequestParam(defaultValue = "0") int page,
+                       @RequestParam(defaultValue = "10") int size,
+                       @RequestParam(required = false) String accident,  // 카테고리 파라미터 추가
                        Model model) {
-        System.out.println("----------------페이징확인하기");
-        System.out.println(page);
-        System.out.println("----------------페이징확인하기");
-        // JPA에서 페이징된 결과를 가져옴 (정렬: 생성일자 기준 내림차순)
-        Page<RegistrationEntity> pagedResult = registrationRepository.findAll(
-                PageRequest.of(page, size, Sort.by("createDate").descending())
-                //   PageRequest.of( (클라이언트요청 페이지), (한페이지게시물갯수),
-                //   Sort.by(RegistrationEntity의 변수createDate(현재시간기준) ).descending()<-내림차순   )
-        );
 
-        // 페이징된 리스트 (content = 현재 페이지의 게시글 목록)
+        Page<RegistrationEntity> pagedResult;
+
+        if (accident == null || accident.equals("") || accident.equals("전체보기")) {
+            // 전체보기: 기존과 동일하게 전체 조회
+            pagedResult = registrationRepository.findAll(
+                    PageRequest.of(page, size, Sort.by("createDate").descending())
+            );
+        } else {
+            // 특정 카테고리만 조회 (accident 필드가 일치하는 것)
+            pagedResult = registrationRepository.findByAccident(
+                    accident, PageRequest.of(page, size, Sort.by("createDate").descending())
+            );
+        }
         model.addAttribute("pagedResult", pagedResult);
-
-        // 현재 페이지 번호
         model.addAttribute("currentPage", page);
-
-        // 전체 페이지 수
         model.addAttribute("totalPages", pagedResult.getTotalPages());
-        System.out.println("--------------");
-        System.out.println("들어왔냐?");
-        System.out.println("--------------");
+        model.addAttribute("selectedAccident", accident); // 선택값도 넘겨서 셀렉트 박스 유지
+
         return "accident/accidentmain";
     }
+
+//    // JPA활용 Pageing
+//    @GetMapping("/return")
+//    public String list(@RequestParam(defaultValue = "0") int page,  // 현재 페이지 번호 (0부터 시작)
+//                       @RequestParam(defaultValue = "10") int size, // 한 페이지에 보여줄 개수
+//                       Model model) {
+//
+//        // JPA에서 페이징된 결과를 가져옴 (정렬: 생성일자 기준 내림차순)
+//        Page<RegistrationEntity> pagedResult = registrationRepository.findAll(
+//                PageRequest.of(page, size, Sort.by("createDate").descending())
+//                //   PageRequest.of( (클라이언트요청 페이지), (한페이지게시물갯수),
+//                //   Sort.by(RegistrationEntity의 변수createDate(현재시간기준) ).descending()<-내림차순   )
+//        );
+//        // 페이징된 리스트 (content = 현재 페이지의 게시글 목록)
+//        model.addAttribute("pagedResult", pagedResult);
+//        // 현재 페이지 번호
+//        model.addAttribute("currentPage", page);
+//        // 전체 페이지 수
+//        model.addAttribute("totalPages", pagedResult.getTotalPages());
+//
+//        return "accident/accidentmain";
+//    }
 
 }
