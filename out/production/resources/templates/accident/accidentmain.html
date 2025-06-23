@@ -5,7 +5,8 @@
     <meta charset="UTF-8">
     <title>사고 게시판</title>
     <!--    <link rel="stylesheet" type="text/css" th:href="@{/style.css}">-->
-    <link rel="stylesheet" type="text/css" href="main/fragmentStyle.css">
+
+    <link rel="stylesheet" th:href="@{/main/head.css}">
     <script src="main/fragment.js"></script>
 
     <style>
@@ -113,11 +114,12 @@
                 }
                 .profileUserName{
                     font-size: 17px;
-                    margin: 0; /* 기본 여백 제거 */
+                    margin: 0;        /* 기본 여백 제거 */
                     color: black;
                 }
                 .profileTime,
-                .profileViewCntSet {
+                .profileViewCntSet,
+                .profileAccident {
                     font-size: 14px;
                     margin: 0; /* 기본 여백 제거 */
                     color: #333;
@@ -137,7 +139,7 @@
                     flex-direction: column;  /* 제목 → 미리보기 세로 정렬 */
                     gap: 4px;                /* 제목과 미리보기 사이 약간의 여백 */
                 }
-                /* 제목 링크 (이미 정의된 클래스면 생략 가능) */
+                /* 제목 링크 */
                 .post-title {
                     font-size: 18px;
                     font-weight: bold;
@@ -162,6 +164,26 @@
                     max-height: calc(1.4em * 3);        /* 최대 n줄 높이까지만 보이도록 제한 (줄 수에 맞춰 계산됨) */
                 }
         /* 페이지 리스트 목록 스타일 끝난점 */
+
+        /* 셀렉트 박스 꾸미기 */
+            select#accident {
+                appearance: none; /* 브라우저 기본 드롭다운 UI 제거하고 커스터마이징 가능하게 함 */
+
+                width: 200px;             /* 셀렉트 박스 너비 */
+                padding: 10px 12px;       /* 내부 여백 (위아래 10px, 좌우 12px) */
+                font-size: 14px;          /* 글자 크기 */
+                color: #333;              /* 글자 색상 (어두운 회색) */
+
+                background-color: #ffffff;  /* 배경 흰색 */
+                border: 1px solid rgba(50, 89, 139, 0.2);  /* 연한 파란색 테두리 */
+                border-radius: 6px;        /* 모서리를 부드럽게 둥글게 */
+                box-shadow: 0 1px 3px rgba(0,0,0,0.08);  /* 아주 은은한 그림자 */
+
+
+                margin-right: 20px;       /* 오른쪽 여백 (다른 요소와 간격 확보) */
+            }
+
+
     </style>
     </style>
 </head>
@@ -169,9 +191,21 @@
 
 <body class="minwooBody">
     <div th:replace="~{main/mainPage:: header}"></div>
-    <div th:replace="~{main/mainPage:: nav}"></div>
+
     <nav>
         <ul>
+            <form method="get" action="/return">
+                <select name="accident" id="accident" onchange="this.form.submit()">
+                    <option th:value="'전체보기'" th:selected="${selectedAccident == '전체보기'}">전체보기</option>
+                    <option th:value="'교통·도로 관련'" th:selected="${selectedAccident == '교통·도로 관련'}">교통·도로 관련</option>
+                    <option th:value="'생활 안전/환경'" th:selected="${selectedAccident == '생활 안전/환경'}">생활 안전/환경</option>
+                    <option th:value="'치안·범죄 예방'" th:selected="${selectedAccident == '치안·범죄 예방'}">치안·범죄 예방</option>
+                    <option th:value="'긴급·재난 상황'" th:selected="${selectedAccident == '긴급·재난 상황'}">긴급·재난 상황</option>
+                    <option th:value="'사회적 약자 보호'" th:selected="${selectedAccident == '사회적 약자 보호'}">사회적 약자 보호</option>
+                    <option th:value="'불법·비상식 행위 제보'" th:selected="${selectedAccident == '불법·비상식 행위 제보'}">불법·비상식 행위 제보</option>
+                </select>
+            </form>
+
             <li><a id="writingID" th:href="@{/accidentwriting}">글등록</a></li>
             <!-- 로그인 상태 -->
             <input type="hidden" name="alias" id="alias" th:value="${session.userAlias}" />
@@ -182,14 +216,20 @@
         <tr th:each="list : ${pagedResult.content}">
             <td class="ListTd">
                 <div class="profileDiv">
-                    <img class="profileUserImg"
+                    <!-- 회원 이미지 -->
+                    <img class="profileUserImg" th:if="${list.profileImage != null}"
+                         th:src="@{'/files/profile/' + ${list.profileImage}}">
+
+                    <img class="profileUserImg" th:if="${list.profileImage == null}"
                          src="https://ssl.pstatic.net/static/cafe/cafe_pc/default/cafe_profile_77.png?type=c77_77">
                     <!-- 작성자 -->
                     <a class="profileUserName" th:href="@{'/profile?alias=' + ${list.alias}}" th:text="${list.alias}"></a>
                     <!-- 작성일 -->
                     <p class="profileTime" th:text="${#temporals.format(list.createDate, 'yyyy-MM-dd HH:mm')}"></p>
                     <!-- 조회수 -->
-                    <p class="profileViewCntSet"  th:text="'조회수 : '+${list.postViews}"></p>
+                    <p class="profileViewCntSet"  th:text="'조회수:'+${list.postViews}"></p>
+                    <!-- 카테고리 -->
+                    <p class="profileAccident"  th:text="${list.accident}"></p>
                 </div>
 
                 <div class="ImgTitleDiv">
@@ -220,7 +260,7 @@
             <!-- 이전 버튼 -->
             <li class="page-num" th:classappend="${currentPage == 0} ? 'disabled'">
                 <a class="page-link"
-                   th:href="@{'/return'(page=${currentPage - 1})}"
+                   th:href="@{'/return'(page=${currentPage - 1}, accident=${selectedAccident})}"
                    th:if="${currentPage > 0}" ><</a>
             </li>
             <!-- <li>현재 페이지가 0일때 이전 버튼을 비활성화
@@ -232,7 +272,7 @@
             <li class="page-item"
                 th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
                 th:classappend="${i == currentPage} ? 'active'">
-                <a class="page-link" th:href="@{'/return'(page=${i})}" th:text="${i + 1}"></a>
+                <a class="page-link" th:href="@{'/return'(page=${i}, accident=${selectedAccident})}" th:text="${i + 1}"></a>
             </li>
             <!-- i에 0 ~ (전체페이지수 -1)일때 까지 반복출력
                  // #numbers는 숫자 관련 유틸리티를 제공하는 내장 객체로, sequence() 메서드를 통해 특정 범위의 숫자 시퀀스를 생성
@@ -242,7 +282,7 @@
             <!-- 다음 버튼 -->
             <li class="page-num" th:classappend="${currentPage == totalPages - 1} ? 'disabled'">
                 <a class="page-link"
-                   th:href="@{'/return'(page=${currentPage + 1})}"
+                   th:href="@{'/return'(page=${currentPage + 1}, accident=${selectedAccident})}"
                    th:if="${currentPage < totalPages - 1}">></a>
             </li>
 
@@ -251,11 +291,7 @@
 </body>
 </html>
 <script>
-    // 문서 시작시
-    $(document).ready(function () {
-        document.getElementById('mainTitle').innerHTML = '사고 게시판'
 
-    });
     // 글쓰기 회원만 권한 주기
     document.getElementById("writingID").addEventListener("click", function(e) {
             let alias = document.getElementById('alias').value;
