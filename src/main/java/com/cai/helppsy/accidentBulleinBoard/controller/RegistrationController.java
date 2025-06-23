@@ -7,8 +7,12 @@ import com.cai.helppsy.accidentBulleinBoard.repository.RegistrationRepository;
 import com.cai.helppsy.accidentBulleinBoard.service.CommentService;
 import com.cai.helppsy.accidentBulleinBoard.service.RegistrationLikeService;
 import com.cai.helppsy.accidentBulleinBoard.service.RegistrationService;
+import com.cai.helppsy.memberManager.SignupEntity;
+import com.cai.helppsy.memberManager.signupRepository;
+import com.cai.helppsy.memberManager.signupService;
 import com.cai.helppsy.tools.Paging;
 import jakarta.servlet.http.HttpSession;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -28,7 +32,8 @@ public class RegistrationController {
     private final RegistrationService registrationService;
     private final CommentService commentservice;
     private final RegistrationRepository registrationRepository;
-
+    private final signupRepository signupRepository; // 회원관리
+    private final signupService signupservice; // 회원관리 서비스단
 
     // 사고 게시판 메인화면
     @GetMapping("accidentmain")
@@ -44,16 +49,27 @@ public class RegistrationController {
 
     // 사고 게시판 작성글 db업로드
     @PostMapping("/registration")
-    public String writing(@ModelAttribute RegistrationEntity registrationEntity){
+    public String writing(@ModelAttribute RegistrationEntity registrationEntity,
+                          Model model){
         System.out.println("--------------------사고 게시판 작성글 ");
         System.out.println("위도 :" + registrationEntity.getLatitude());
         System.out.println("경도 :" + registrationEntity.getLongitude());
         System.out.println("--------------------사고 게시판 작성글 ");
-        // ,@RequestParam("file") MultipartFile[] file) throws Exception {
-//        registrationEntity.setAlias(session.getAttribute("userAlias").toString());
+
         // session.getAttribute("userAlias").toString() 세션에 저장되어있는 별명을 바로 엔티티에 저장
         registrationService.write(registrationEntity); // 작성글 서비스단 보내기
 //        registrationService.files(file, registrationEntity); // 사진 서비스단 보내기
+
+        // 회원 정보 저장시키기.
+        SignupEntity signupEntity = signupRepository.findByAlias(registrationEntity.getAlias());
+        String signupEntityImg = signupEntity.getProfileImage(); // 회원 프로필 이미지
+
+        // 게시글 자료형의 entity 변수 객체를 만들어
+        // .findTop1ByAliasOrderByCreateDateDesc = Alias로 조회한 CreateDateDesc가장최신 순으로 Top1 1개만 가져온다
+        RegistrationEntity entity = registrationRepository.findTop1ByAliasOrderByCreateDateDesc(registrationEntity.getAlias())
+                .orElseThrow(()->new RuntimeException("게시글을 찾을 수 없습니다"));
+        entity.setProfileImage(signupEntityImg); // 회원 이미지 저장시키고
+        registrationRepository.save(entity);      // 회원 이미지 저장시킨 entity를 저장하여 JPA가 자동수정
         return "redirect:/return";
     }
 
@@ -95,6 +111,12 @@ public class RegistrationController {
         // 게시글 조회수 (비동기 처리 로직에서 가져오기)
         int postviewsnum = registrationService.getPostView(id); // 게시글 번호를 파라미터로 전달
         model.addAttribute("postviewsnum",postviewsnum);
+
+        // 회원 프로필 사진 가져오기
+        SignupEntity signupEntity = signupRepository.findByAlias(view.getAlias());
+        model.addAttribute("signupEntity",signupEntity);
+
+
         return "accident/accidentview";
     }
 
@@ -123,7 +145,6 @@ public class RegistrationController {
     public String UpdateAccident(@RequestParam("id") Integer id,
                                  @RequestParam("alias") String alias,
                                  Model model){
-        System.out.println();
         Optional<RegistrationEntity> UpdateEntity = registrationService.UpdateAccidentPage(id,alias);
         RegistrationEntity Update = UpdateEntity.get();
         System.out.println("---------------------------게시글 수정하기 여기보자");

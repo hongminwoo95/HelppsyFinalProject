@@ -5,7 +5,8 @@
     <meta charset="UTF-8">
     <title>사고 게시판</title>
     <!--    <link rel="stylesheet" type="text/css" th:href="@{/style.css}">-->
-    <link rel="stylesheet" type="text/css" href="main/fragmentStyle.css">
+
+    <link rel="stylesheet" th:href="@{/main/head.css}">
     <script src="main/fragment.js"></script>
 
     <style>
@@ -190,7 +191,7 @@
 
 <body class="minwooBody">
     <div th:replace="~{main/mainPage:: header}"></div>
-    <div th:replace="~{main/mainPage:: nav}"></div>
+
     <nav>
         <ul>
             <form method="get" action="/return">
@@ -215,7 +216,11 @@
         <tr th:each="list : ${pagedResult.content}">
             <td class="ListTd">
                 <div class="profileDiv">
-                    <img class="profileUserImg"
+                    <!-- 회원 이미지 -->
+                    <img class="profileUserImg" th:if="${list.profileImage != null}"
+                         th:src="@{'/files/profile/' + ${list.profileImage}}">
+
+                    <img class="profileUserImg" th:if="${list.profileImage == null}"
                          src="https://ssl.pstatic.net/static/cafe/cafe_pc/default/cafe_profile_77.png?type=c77_77">
                     <!-- 작성자 -->
                     <a class="profileUserName" th:href="@{'/profile?alias=' + ${list.alias}}" th:text="${list.alias}"></a>
@@ -286,11 +291,7 @@
 </body>
 </html>
 <script>
-    // 문서 시작시
-    $(document).ready(function () {
-        document.getElementById('mainTitle').innerHTML = '사고 게시판'
 
-    });
     // 글쓰기 회원만 권한 주기
     document.getElementById("writingID").addEventListener("click", function(e) {
             let alias = document.getElementById('alias').value;

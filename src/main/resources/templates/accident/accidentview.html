@@ -11,7 +11,6 @@
             font-family: 'Noto Sans KR', sans-serif;
             background-color: #f8f9fa;
             margin: 20px;
-
         }
 
         .info-table {
@@ -157,19 +156,48 @@
         width: 350px;
         height: 60px;
         margin-left: 3px;
+        padding-top: -20px;  /* 닉네임 높이 조절 */
     }
-    /* 프로필 이미지 */
+    /* 게시글 프로필 이미지*/
     .profileUserImg {
         position: absolute;
         width: 50px;
         height: 50px;
+        border-radius: 50%;     /* 동그랗게 */
+        object-fit: cover;      /* 이미지 비율 유지 */
     }
+
+    /* 댓글 프로필 및 버튼들 1열 맞추기----*/
+        .ContentprofileUserImg {
+          position: static;       /* 절대 위치 해제 - 흐름에 따라 배치 */
+          width: 50px;
+          height: 50px;
+          border-radius: 50%;     /* 동그랗게 */
+          object-fit: cover;      /* 이미지 비율 유지 */
+        }
+        #commentAlias, #comment {
+          display: inline-block;  /* 블록이 아니라 인라인블록으로 */
+          margin: 0;              /* 불필요한 마진 제거 */
+        }
+
+        #commentAlias {
+          font-weight: bold;
+          font-size: 17px;
+        }
+
+        #comment {
+          font-size: 15px;
+          color: #555;
+        }
+    /* 댓글 프로필 및 버튼들 1열 맞추기----*/
+
+
     /* 프로필 이름 */
     .profileUserName {
         position: absolute;
         font-size: 17px;
         margin-left: 70px;
-        top : -12px;
+        top : 0px;
     }
 
     .profileTime {
@@ -189,9 +217,9 @@
     }
 
     .comment-buttons {
-        display: flex;
-        gap: 10px; /* 버튼 간격 */
-        margin-top: 10px;
+      display: flex;          /* 가로 정렬 */
+      align-items: center;    /* 세로 중앙 정렬 */
+      gap: 10px;              /* 이미지와 텍스트 사이 간격 */
     }
 
     /* 작성내용 보여지는곳 */
@@ -295,11 +323,16 @@
         </form>
     </div>
     <br>
+
     <!-- 프로필 자리 생성 -->
     <div class="profileDiv">
-        <img class="profileUserImg"
+        <img class="profileUserImg" th:if="${signupEntity.profileImage != null}"
+             th:src="@{'/files/profile/' + ${signupEntity.profileImage}}">
+
+        <img class="profileUserImg" th:if="${signupEntity.profileImage == null}"
              src="https://ssl.pstatic.net/static/cafe/cafe_pc/default/cafe_profile_77.png?type=c77_77">
-        <p class="profileUserName" th:text="${view.alias}"></p>
+
+        <a class="profileUserName"  th:href="@{'/profile?alias=' + ${view.alias}}" th:text="${view.alias}"></a>
         <p class="profileTime"
            th:text="'등록일 : '+${#temporals.format(view.createDate, 'yyyy-MM-dd HH:mm')}"></p>
         <p class="profileViewCntSet" th:text="'조회수 : '+${postviewsnum}"></p>
@@ -372,8 +405,17 @@
         <div th:each="commentlist : ${commenet}" class="comment" id="commentlistId">
             <div class="comment-buttons"> <!-- 좋아요,삭제,수정 한곳에 뭉치기 div -->
 
+                <!-- 프로필 이미지 가져오기 -->
+                <img class="ContentprofileUserImg" th:if="${signupEntity.profileImage != null}"
+                     th:src="@{'/files/profile/' + ${signupEntity.profileImage}}">
+
+                <img class="ContentprofileUserImg" th:if="${signupEntity.profileImage == null}"
+                     src="https://ssl.pstatic.net/static/cafe/cafe_pc/default/cafe_profile_77.png?type=c77_77">
+
                 <!-- 작성자,댓글내용 -->
-                <strong id="commentAlias" th:text="${commentlist.alias}" style="display: block;"></strong>
+                <a th:href="@{'/profile?alias=' + ${commentlist.alias}}">
+                 <strong id="commentAlias"  th:text="${commentlist.alias}" style="display: block;"></strong>
+                </a>
                 <span id="comment" th:text="${commentlist.comment}" style="display: block;"></span>
 
                 <!-- 댓글 수정 input (초기에는 숨김) 수정 클릭시 나오게 -->
@@ -411,18 +453,18 @@
             <button class="commentBtn" type="button" th:attr="data-comment-id=${commentlist.id}"
                     style="margin-bottom: 10px; padding : 6px; background-color: white; border-color: white;">대댓글</button>
 
-            <!-- 대댓글 입력하기 -->
-            <div class="commentReply" style="display: none;" th:attr="data-comment-id=${commentlist.id}">
-                <form class="comment-reply-form" data-comment-id="[[${commentlist.id}]]">
-                    <input type="text" name="comment" id="commentReply"  placeholder="대댓글을 입력하세요">
-                    <input type="hidden" name="alias" th:value="${session.userAlias}" />
-                    <input type="hidden" name="commentId" th:value="${commentlist.id}" />
-                    <input type="submit" value="대댓글등록" style="margin-bottom: 10px; padding : 6px; background-color: white; border-color: white;">
+                <!-- 대댓글 입력하기 -->
+                <div class="commentReply" style="display: none;" th:attr="data-comment-id=${commentlist.id}">
+                    <form class="comment-reply-form" data-comment-id="[[${commentlist.id}]]">
+                        <input type="text" name="comment" id="commentReply"  placeholder="대댓글을 입력하세요">
+                        <input type="hidden" name="alias" th:value="${session.userAlias}" />
+                        <input type="hidden" name="commentId" th:value="${commentlist.id}" />
+                        <input type="submit" value="대댓글등록" style="margin-bottom: 10px; padding : 6px; background-color: white; border-color: white;">
 
-                    <!-- 대댓글 목록을 보여줄 영역 -->
-                </form>
-                <div class="reply-list" th:attr="data-comment-id=${commentlist.id}"></div>
-            </div>
+                        <!-- 대댓글 목록을 보여줄 영역 -->
+                    </form>
+                    <div class="reply-list" th:attr="data-comment-id=${commentlist.id}"></div>
+                </div>
         </div>
     </div>
     <div class="GoBack"><a class="GoBackText" th:href="@{/accidentmain}">제보게시판</a></div>

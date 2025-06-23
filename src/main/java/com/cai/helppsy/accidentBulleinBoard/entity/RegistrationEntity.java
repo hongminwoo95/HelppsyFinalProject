@@ -6,6 +6,9 @@ import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -60,6 +63,9 @@ public class RegistrationEntity {
     @UpdateTimestamp
     private LocalDateTime modifiedDate; // 글 수정 시간
 
+    @Column(columnDefinition = "MEDIUMTEXT")
+    private String profileImage; // 회원 프로필 이미지
+
     // 1:N 관계에서 사용
     // 파일 리스트
     @OneToMany(mappedBy = "registrationEntity",cascade = CascadeType.REMOVE, orphanRemoval = true)
@@ -76,7 +82,7 @@ public class RegistrationEntity {
     private List<RegistrationLikeEntity> likeEntities;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "singup_entity_id")
+    @JoinColumn(name = "signup_entity_id")
     // Join되는거 service쪽 fileEntity.setRegistrationEntity(registrationEntity);에서 연결
     private SignupEntity signupEntity;
 }

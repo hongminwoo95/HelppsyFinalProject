@@ -16,4 +16,9 @@ public interface RegistrationRepository extends JpaRepository<RegistrationEntity
     Optional<RegistrationEntity> findByIdAndAlias(Integer id, String alias); // 게시물 수정
 
     Page<RegistrationEntity> findByAccident(String accident, Pageable pageable); // 카테고리별 페이징 보여주기
+
+    List<RegistrationEntity> findByAlias(String alias); // 추천
+
+    // 회원 ID 게시글테이블에 컬럼추가 하기위해
+    Optional<RegistrationEntity> findTop1ByAliasOrderByCreateDateDesc(String alias);
 }

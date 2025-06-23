@@ -132,5 +132,8 @@ public class RegistrationService{
         return registrationrepository.save(entity);
     }
 
+    public List<RegistrationEntity> getPostsByAlias(String alias) {
+        return registrationrepository.findByAlias(alias);
+    }
 
 }
