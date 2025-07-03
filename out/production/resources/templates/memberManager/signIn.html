@@ -123,7 +123,15 @@
             <td colspan="2"><input id="submitBtn" type="submit" value="로그인"></td>
         </tr>
     </table>
+    <input id="status" type="hidden" th:value="${status}">
 </form>
 </body>
-
 </html>
+<script>
+    window.onload = () => {
+        const status = document.getElementById('status');
+        if(status.value == "loginFail"){
+            alert("등록된 정보와 일치하지 않습니다.")
+        }
+    }
+</script>

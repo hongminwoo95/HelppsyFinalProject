@@ -77,6 +77,19 @@
         .form-buttons input[type="button"]:hover {
             background-color: #5f5f5f;
         }
+
+        /* Added style for circular profile image preview */
+        .profile-container img#profileImagePreview {
+            border-radius: 50%; /* Make it circular */
+            object-fit: cover; /* Ensure the image covers the area without distortion */
+            margin-top: 10px;
+            border: 1px solid #ddd;
+            max-width: 150px; /* Adjust size as needed */
+            max-height: 150px; /* Adjust size as needed */
+            display: block; /* Ensure it's on its own line */
+            margin-left: auto; /* Center the image */
+            margin-right: auto; /* Center the image */
+        }
     </style>
 </head>
 <body>
@@ -86,8 +99,9 @@
 
     <form action="/update" method="POST" enctype="multipart/form-data">
         <label>
-            프로필 사진
-            <input id="minwoo" type="file" name="Ffile" accept="image/*">
+            프로필 사진:
+            <input id="profileImageInput" type="file" name="Ffile" accept="image/*">
+            <img id="profileImagePreview" src="" alt="프로필 이미지 미리보기" style="display: none;">
         </label>
         <label>
             아이디:
@@ -105,17 +119,6 @@
             <input type="text" name="alias" th:value="${user.alias}">
         </label>
 
-<!--        <label>-->
-<!--            구분:-->
-<!--&lt;!&ndash;            <input class="division" name="division" type="checkbox" onclick="checkOnlyOne(this)" value="설계사" readonly>설계사&ndash;&gt;-->
-<!--&lt;!&ndash;            <input class="division" name="division" type="checkbox" onclick="checkOnlyOne(this)" value="일반인" readonly>일반인&ndash;&gt;-->
-<!--            <input type="text" name="division" th:value="${user.division}" readonly>-->
-<!--        </label>-->
-<!--        <label>-->
-<!--            고유번호:-->
-<!--            <input type="text" name="dNum" th:value="${user.dNum}" readonly>-->
-<!--        </label>-->
-
         <label>
             소개글:
             <textarea name="intro" rows="5" cols="50" th:text="${user.intro}"></textarea>
@@ -130,23 +133,36 @@
 </body>
 </html>
 
-<script>
-<!--    function checkOnlyOne(clickcheckbox) {-->
-<!--        const checkboxes = document.getElementsByName("division");-->
+<script th:inline="javascript">
 
-<!--        checkboxes.forEach((checkbox) => {-->
-<!--            checkbox.checked = false;-->
-<!--        });-->
+    document.addEventListener('DOMContentLoaded', function() {
+        const profileImageInput = document.getElementById('profileImageInput');
+        const profileImagePreview = document.getElementById('profileImagePreview');
 
-<!--        clickcheckbox.checked = true;-->
+        profileImageInput.addEventListener('change', function(event) {
+            const file = event.target.files[0]; // 선택된 파일 가져오기
 
+            if (file) {
+                const reader = new FileReader(); // FileReader 객체 생성
 
-<!--        let DV = document.getElementsByClassName('division')-->
+                reader.onload = function(e) {
+                    profileImagePreview.src = e.target.result; // 이미지 src에 파일 데이터 설정
+                    profileImagePreview.style.display = 'block'; // 이미지 표시
+                };
 
-<!--        for(let i = 0 ; i<DV.length ; i++){-->
-<!--            if(DV[i].checked == true){-->
-<!--                DV[i].setAttribute('name',"division");-->
-<!--            }-->
-<!--        }-->
-<!--    }-->
+                reader.readAsDataURL(file); // 파일을 Data URL 형식으로 읽기
+            } else {
+                profileImagePreview.src = ''; // 파일이 없으면 이미지 초기화
+                profileImagePreview.style.display = 'none'; // 이미지 숨기기
+            }
+        });
+
+        // 프로필 수정 시 기존 프로필 이미지가 있다면 미리보기로 표시
+        if ([[${profileImageUrl}]] && [[${profileImageUrl}]] !== '') {
+            profileImagePreview.src = [[${profileImageUrl}]];
+            profileImagePreview.style.display = 'block';
+        }
+
+    });
+
 </script>

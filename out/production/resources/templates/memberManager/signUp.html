@@ -91,14 +91,6 @@
         border: #45449b 2px solid;
         /* 패딩과 테두리를 포함한 너비 계산 */
     }
-
-    #division{
-         width: 100%;
-        padding: 10px;
-        margin-left: -15px;
-        box-sizing: border-box;
-        border: #45449b 2px solid;
-    }
 </style>
 
 <body>
@@ -128,15 +120,6 @@
         <tr class="idpw">
             <td>별명</td>
             <td><input id="alias" type="text" name="alias" placeholder="별명을 입력하세요"></td>
-        </tr>
-        <tr class="idpw">
-            <td>
-                <input class="division" name="division" type="checkbox" onclick="checkOnlyOne(this)" value="설계사">설계사
-                <input class="division" name="division" type="checkbox" onclick="checkOnlyOne(this)" checked value="일반인">일반인
-            </td>
-            <td>
-                <input id="division" type="text" name="dNum" placeholder="고유번호 14자리를 입력하세요" maxlength="14" style="display: none;">
-            </td>
         </tr>
         <tr>
             <td colspan="2"><input id="submitBtn" type="button" value="가입하기" onclick="submitToServer()"></td>
@@ -187,12 +170,6 @@
         let alias = document.getElementById('alias').value;
         let form = document.getElementById('form');
 
-        const DV = document.querySelector('input[name="division"]:checked').value === "설계사";
-        let division = document.getElementById('division').value;
-
-
-
-
         if (id === '') {
             alert('아이디를 입력하세요');
             return;
@@ -218,48 +195,6 @@
             return;
         }
 
-        if (DV) {
-        if (division.length !== 14) {
-            alert('설계사 고유번호는 14자리여야 합니다.');
-            return;
-            }
-        }
-
         form.submit();
-    }
-
-    function checkOnlyOne(clickcheckbox) {
-        const checkboxes = document.getElementsByName("division");
-
-        checkboxes.forEach((checkbox) => {
-            checkbox.checked = false;
-        });
-
-        clickcheckbox.checked = true;
-
-
-        let DV = document.getElementsByClassName('division');
-
-        for(let i = 0 ; i<DV.length ; i++){
-            if(DV[i].checked == true){
-                DV[i].setAttribute('name',"division");
-            }
-        }
-        if (checkboxes[0].checked) {
-            let dt = document.getElementById('division')
-            dt.placeholder = "설계사 고유번호 14자리를 입력하세요";
-            dt.style.display = "table-row";
-
-            const division = document.getElementById('division').value;
-            if (division.length !== 14) {
-                return false;
-            }
-            return true;
-        }
-        else if(checkboxes[1].checked){
-            let dt = document.getElementById('division')
-            dt.style.display = "none";
-
-        }
     }
 </script>

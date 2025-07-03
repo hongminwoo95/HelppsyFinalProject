@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>사고 게시판</title>
+    <title>제보 게시판</title>
     <!--    <link rel="stylesheet" type="text/css" th:href="@{/style.css}">-->
 
     <link rel="stylesheet" th:href="@{/main/head.css}">
@@ -78,12 +78,6 @@
             margin: 0 auto;                         /* 중앙 정렬 (가로) */
         }
 
-        .active {
-            margin-bottom: 10px;
-            padding : 6px;
-            background-color: rgba(138, 152, 98, 0.1);
-            border-color: rgba(138, 152, 98, 0.1);
-        }
 
         .page-num{
             background-color: rgba(138, 152, 98, 0.1);
@@ -111,6 +105,11 @@
                 }
                 #MainImg{
                     border: 1px solid rgba(50, 89, 139, 0.4);
+                }
+                #MainImg img {
+                    width: 120px;
+                    height: auto;
+
                 }
                 .profileUserName{
                     font-size: 17px;
@@ -182,8 +181,37 @@
 
                 margin-right: 20px;       /* 오른쪽 여백 (다른 요소와 간격 확보) */
             }
+            #OneDiv {
+                margin: 15px auto 16px auto; /* 위쪽 100px, 좌우 auto 가운데정렬, 아래 16px */
+                display: flex;
+                justify-content: flex-end;    /* 오른쪽 끝 정렬 */
+                max-width: 770px;             /* 테이블과 같은 너비 */
+                width: 100%;
+            }
+            #TwoDiv {
+                display: flex;
+                align-items: center;
+                gap: -15px;                    /* 셀렉트박스와 버튼 간 간격 */
+            }
+            .ThreeDiv {
+                margin: 0 15px;
+            }
 
+            /* 글쓰기 버튼 페이징번호랑 스타일 맞추기 */
+            .writingButton {
+                background-color: rgba(138, 152, 98, 0.1);
+                border: 1px solid rgba(138, 152, 98, 0.2);
+                padding: 8px 12px;
+                border-radius: 6px;
+                font-weight: bold;
+                color: #333;
+                text-decoration: none;
+                transition: background-color 0.3s;
+            }
 
+            .writing-button:hover {
+                background-color: rgba(138, 152, 98, 0.2);
+            }
     </style>
     </style>
 </head>
@@ -192,10 +220,10 @@
 <body class="minwooBody">
     <div th:replace="~{main/mainPage:: header}"></div>
 
-    <nav>
-        <ul>
+    <div id="OneDiv">
+        <div id="TwoDiv">
             <form method="get" action="/return">
-                <select name="accident" id="accident" onchange="this.form.submit()">
+                <select name="accident" id="accident" onchange="this.form.submit()" class="ThreeDiv">
                     <option th:value="'전체보기'" th:selected="${selectedAccident == '전체보기'}">전체보기</option>
                     <option th:value="'교통·도로 관련'" th:selected="${selectedAccident == '교통·도로 관련'}">교통·도로 관련</option>
                     <option th:value="'생활 안전/환경'" th:selected="${selectedAccident == '생활 안전/환경'}">생활 안전/환경</option>
@@ -206,11 +234,11 @@
                 </select>
             </form>
 
-            <li><a id="writingID" th:href="@{/accidentwriting}">글등록</a></li>
+            <div class="ThreeDiv"><a id="writingID" class="writingButton ThreeDiv" th:href="@{/accidentwriting}">글등록</a></div>
             <!-- 로그인 상태 -->
             <input type="hidden" name="alias" id="alias" th:value="${session.userAlias}" />
-        </ul>
-    </nav>
+        </div>
+      </div>
 
     <table>
         <tr th:each="list : ${pagedResult.content}">
@@ -288,6 +316,8 @@
 
         </ul>
     </nav>
+    <div th:replace="~{main/mainPage:: footer}"></div>
+
 </body>
 </html>
 <script>
